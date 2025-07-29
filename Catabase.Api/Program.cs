@@ -1,4 +1,5 @@
 using Carter;
+using Catabase.Api.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddOpenApiDocument();
 builder.Services.AddCarter();
+
+builder.Services.AddInfrastructureServices();
+builder.Services.AddApplicationServices();
+builder.Services.AddApiServices();
 
 var app = builder.Build();
 

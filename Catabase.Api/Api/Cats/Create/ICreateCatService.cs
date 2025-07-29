@@ -1,4 +1,6 @@
-﻿namespace Catabase.Api.Api.Cats.Create;
+﻿using Catabase.Application.Requests;
+
+namespace Catabase.Api.Api.Cats.Create;
 
 public interface ICreateCatService
 {

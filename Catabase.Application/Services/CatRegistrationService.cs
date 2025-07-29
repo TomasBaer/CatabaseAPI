@@ -1,15 +1,30 @@
-﻿using Catabase.Domain.UseCases;
+﻿using Catabase.Application.Interfaces;
+using Catabase.Domain.Entities;
+using Catabase.Domain.Enums;
+using Catabase.Domain.UseCases;
 
 namespace Catabase.Application.Services;
 
-public class CatRegistrationService : ICatRegistration
+public class CatRegistrationService(ICatRepository repository) : ICatRegistration
 {
-	public async Task RegisterCatAsync(string name, string breed, string color, int age)
+	private readonly ICatRepository _repository = repository;
+
+	public async Task<int> RegisterCatAsync(string name, Breed breed, Color primaryColor, int age)
 	{
-		throw new NotImplementedException();
+		var cat = new Cat()
+		{
+			Name = name,
+			Breed = breed,
+			PrimaryColor = primaryColor,
+			Age = age
+		};
+
+		var id = await _repository.CreateCatAsync(cat);
+
+		return id;
 	}
 
-	public async Task UpdateCatAsync(int id, string name, string breed, string color, int age)
+	public Task UpdateCatAsync(int id, string name, Breed breed, Color primaryColor, int age)
 	{
 		throw new NotImplementedException();
 	}

@@ -1,6 +1,6 @@
 ﻿using Catabase.Domain.Enums;
 
-namespace Catabase.Api.Api.Cats.Create;
+namespace Catabase.Application.Requests;
 
 public class CreateCatRequest
 {

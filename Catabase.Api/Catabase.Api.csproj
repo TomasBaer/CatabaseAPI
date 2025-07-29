@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Catabase.Application\Catabase.Application.csproj" />
+    <ProjectReference Include="..\Catabase.Infrastructure\Catabase.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

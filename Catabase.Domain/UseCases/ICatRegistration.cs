@@ -1,7 +1,9 @@
-﻿namespace Catabase.Domain.UseCases;
+﻿using Catabase.Domain.Enums;
+
+namespace Catabase.Domain.UseCases;
 
 public interface ICatRegistration
 {
-	Task RegisterCatAsync(string name, string breed, string color, int age);
-	Task UpdateCatAsync(int id, string name, string breed, string color, int age);
+	Task<int> RegisterCatAsync(string name, Breed breed, Color primaryColor, int age);
+	Task UpdateCatAsync(int id, string name, Breed breed, Color primaryColor, int age);
 }

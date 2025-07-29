@@ -1,4 +1,6 @@
-﻿namespace Catabase.Api.Api.Cats.Get;
+﻿using Catabase.Application.Responses;
+
+namespace Catabase.Api.Api.Cats.Get;
 
 public interface IGetCatsService
 {

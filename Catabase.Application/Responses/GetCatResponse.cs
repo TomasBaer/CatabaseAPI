@@ -1,13 +1,12 @@
 ﻿using Catabase.Domain.Enums;
 
-namespace Catabase.Domain.Entities;
+namespace Catabase.Application.Responses;
 
-public class Cat
+public class GetCatResponse
 {
 	public int Id { get; set; }
 	public string Name { get; set; } = string.Empty;
 	public Breed Breed { get; set; }
-	public Color PrimaryColor { get; set; }
-	public Color SecondaryColor { get; set; }
 	public int Age { get; set; }
+	public Color PrimaryColor { get; set; }
 }

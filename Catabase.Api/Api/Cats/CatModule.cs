@@ -1,10 +1,9 @@
-﻿using System.Net;
-using Carter;
+﻿using Carter;
 using Catabase.Api.Api.Cats.Create;
 using Catabase.Api.Api.Cats.Get;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Catabase.Application.Requests;
+using Catabase.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
 
 namespace Catabase.Api.Api.Cats;
 
@@ -32,7 +31,7 @@ public class CatModule : CarterModule
 		.Produces(StatusCodes.Status404NotFound)
 		.Produces(StatusCodes.Status500InternalServerError);
 
-		app.MapGet("/all", async ([FromServices]IGetCatsService service) =>
+		app.MapGet("/search", async ([FromServices]IGetCatsService service) =>
 		{
 			var cats = await service.GetAllCatsAsync();
 			return cats.Any() ? Results.Ok(cats) : Results.Ok();
@@ -49,6 +48,8 @@ public class CatModule : CarterModule
 			{
 				return Results.Problem("An error occurred while creating the cat.", statusCode: 500);
 			}
-		});
+		})
+		.Produces<GetCatResponse>(StatusCodes.Status200OK)
+		.Produces(StatusCodes.Status500InternalServerError);
 	}
 }

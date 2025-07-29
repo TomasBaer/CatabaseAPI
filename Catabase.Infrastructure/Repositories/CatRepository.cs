@@ -1,14 +1,19 @@
-﻿using Catabase.Domain.Entities;
+﻿using Catabase.Application.Interfaces;
+using Catabase.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catabase.Infrastructure.Repositories;
 
-public class CatRepository : ICatRepository
+public class CatRepository(ICatabaseDb db) : ICatRepository
 {
+	private readonly ICatabaseDb _db = db;
 
-
-	public Task AddCatAsync(Cat cat)
+	public async Task<int> CreateCatAsync(Cat cat, CancellationToken ct = default)
 	{
-		throw new NotImplementedException();
+		_db.Cats.Add(cat);
+		await _db.SaveChangesAsync(ct);
+
+		return cat.Id;
 	}
 
 	public Task DeleteCatAsync(int id)
@@ -16,9 +21,11 @@ public class CatRepository : ICatRepository
 		throw new NotImplementedException();
 	}
 
-	public Task<IEnumerable<Cat>> GetAllCatsAsync()
+	public async Task<IEnumerable<Cat>> GetAllCatsAsync(CancellationToken ct = default)
 	{
-		throw new NotImplementedException();
+		var cats = await _db.Cats.ToArrayAsync(ct);
+
+		return cats;
 	}
 
 	public Task<Cat?> GetCatByIdAsync(int id)
