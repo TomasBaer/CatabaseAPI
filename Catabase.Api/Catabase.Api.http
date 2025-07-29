@@ -1,0 +1,6 @@
+@Catabase.Api_HostAddress = http://localhost:5261
+
+GET {{Catabase.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,54 @@
+﻿using System.Net;
+using Carter;
+using Catabase.Api.Api.Cats.Create;
+using Catabase.Api.Api.Cats.Get;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
+
+namespace Catabase.Api.Api.Cats;
+
+public class CatModule : CarterModule
+{
+	public CatModule() : base("/cats")
+	{
+	}
+
+	public override void AddRoutes(IEndpointRouteBuilder app)
+	{
+		app.MapGet("/", async ([FromServices] IGetCatsService service, int id, CancellationToken ct) =>
+		{
+			try
+			{
+				var cat = await service.GetCatAsync(id, ct);
+				return cat != null ? Results.Ok(cat) : Results.NotFound();
+			}
+			catch (Exception)
+			{
+				return Results.Problem("There was a problem fetching the cat.", statusCode: 500);
+			}
+		})
+		.Produces<GetCatResponse>(StatusCodes.Status200OK)
+		.Produces(StatusCodes.Status404NotFound)
+		.Produces(StatusCodes.Status500InternalServerError);
+
+		app.MapGet("/all", async ([FromServices]IGetCatsService service) =>
+		{
+			var cats = await service.GetAllCatsAsync();
+			return cats.Any() ? Results.Ok(cats) : Results.Ok();
+		});
+
+		app.MapPost("/", async ([FromServices]ICreateCatService service, CreateCatRequest request, CancellationToken ct) =>
+		{
+			try
+			{
+				var id = await service.CreateCatAsync(request, ct);
+				return Results.Created($"/cats/{id}", id);
+			}
+			catch (Exception)
+			{
+				return Results.Problem("An error occurred while creating the cat.", statusCode: 500);
+			}
+		});
+	}
+}
