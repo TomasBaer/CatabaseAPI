@@ -15,6 +15,7 @@ public class CatModule : CarterModule
 
 	public override void AddRoutes(IEndpointRouteBuilder app)
 	{
+		// GET
 		app.MapGet("/", async ([FromServices] IGetCatsService service, int id, CancellationToken ct) =>
 		{
 			try
@@ -34,9 +35,10 @@ public class CatModule : CarterModule
 		app.MapGet("/search", async ([FromServices]IGetCatsService service) =>
 		{
 			var cats = await service.GetAllCatsAsync();
-			return cats.Any() ? Results.Ok(cats) : Results.Ok();
+			return Results.Ok(cats);
 		});
 
+		// POST
 		app.MapPost("/", async ([FromServices]ICreateCatService service, CreateCatRequest request, CancellationToken ct) =>
 		{
 			try
