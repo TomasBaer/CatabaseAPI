@@ -8,6 +8,16 @@ public class SearchCatsService(ICatSearch catSearchService) : ISearchCatsService
 
 	public async Task<SearchCatsResponse> SearchCatsAsync(string? query, int page, int pageSize, CancellationToken ct = default)
 	{
+		if (page < 0)
+		{
+			throw new ArgumentOutOfRangeException(nameof(page), "Page number cannot be negative.");
+		}
+
+		if (pageSize <= 0)
+		{
+			throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be a positive integer.");
+		}
+
 		if (string.IsNullOrWhiteSpace(query))
 		{
 			query = string.Empty;

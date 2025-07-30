@@ -67,7 +67,7 @@ public class SearchCatsTests
 		// Arrange
 		var catSearchService = Substitute.For<ICatSearch>();
 		catSearchService.SearchCatsAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
-			.Returns(Task.FromResult<ISearchResponse<Cat>>(new CatSearchResponse { TotalCount = 0, Items = new List<Cat>() }));
+			.Returns(Task.FromResult<ISearchResponse<Cat>>(new CatSearchResponse { TotalCount = 0, Items = [] }));
 
 		var searchCatsService = new SearchCatsService(catSearchService);
 
@@ -88,5 +88,24 @@ public class SearchCatsTests
 
 		await Assert.ThrowsAsync<OperationCanceledException>(() =>
 			_searchCatsService.SearchCatsAsync("any", 1, 10, cts.Token));
+	}
+
+	[Theory]
+	[InlineData(-1)]
+	[InlineData(-5)]
+	public async Task SearchCatsAsync_Throws_When_Page_Is_Negative(int page)
+	{
+		await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+			_searchCatsService.SearchCatsAsync("any", page, 10, CancellationToken.None));
+	}
+
+	[Theory]
+	[InlineData(0)]
+	[InlineData(-1)]
+	[InlineData(-10)]
+	public async Task SearchCatsAsync_Throws_When_PageSize_Is_Zero_Or_Negative(int pageSize)
+	{
+		await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+			_searchCatsService.SearchCatsAsync("any", 1, pageSize, CancellationToken.None));
 	}
 }
