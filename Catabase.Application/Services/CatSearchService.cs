@@ -14,7 +14,7 @@ public class CatSearchService(ICatRepository catRepository) : ICatSearch
 	{
 		var searchResults = await _catRepository.SearchCatsAsync(query, page, pageSize, ct);
 
-		return new SearchCatsResponse()
+		return new CatSearchResponse()
 		{
 			TotalCount = searchResults.Item2,
 			Items = searchResults.Item1

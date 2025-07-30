@@ -1,6 +1,6 @@
 ﻿namespace Catabase.Domain.Enums;
 
-public enum Color
+public enum CoatColor
 {
 	Unknown = 0,
 	Black = 1,

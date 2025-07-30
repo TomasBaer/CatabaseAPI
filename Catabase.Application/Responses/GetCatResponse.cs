@@ -8,5 +8,5 @@ public class GetCatResponse
 	public string Name { get; set; } = string.Empty;
 	public Breed Breed { get; set; }
 	public int Age { get; set; }
-	public Color PrimaryColor { get; set; }
+	public CoatColor PrimaryColor { get; set; }
 }

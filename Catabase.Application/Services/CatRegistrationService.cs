@@ -9,7 +9,7 @@ public class CatRegistrationService(ICatRepository repository) : ICatRegistratio
 {
 	private readonly ICatRepository _repository = repository;
 
-	public async Task<int> RegisterCatAsync(string name, Breed breed, Color primaryColor, int age)
+	public async Task<int> RegisterCatAsync(string name, Breed breed, CoatColor primaryColor, int? age, CancellationToken ct = default)
 	{
 		var cat = new Cat()
 		{
@@ -24,7 +24,7 @@ public class CatRegistrationService(ICatRepository repository) : ICatRegistratio
 		return id;
 	}
 
-	public Task UpdateCatAsync(int id, string name, Breed breed, Color primaryColor, int age)
+	public Task UpdateCatAsync(int id, string name, Breed breed, CoatColor primaryColor, int? age, CancellationToken ct = default)
 	{
 		throw new NotImplementedException();
 	}

@@ -1,5 +1,4 @@
-﻿using Catabase.Application.Responses;
-using Catabase.Domain.UseCases;
+﻿using Catabase.Domain.UseCases;
 
 namespace Catabase.Api.Api.Cats.Search;
 

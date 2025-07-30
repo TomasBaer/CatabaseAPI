@@ -2,5 +2,7 @@
 
 public enum Breed
 {
-	Unknown = 0
+	Unknown = 0,
+	Persian = 1,
+	Siamese = 2
 }
