@@ -1,6 +1,7 @@
 ﻿using Carter;
 using Catabase.Api.Api.Cats.Create;
 using Catabase.Api.Api.Cats.Get;
+using Catabase.Api.Api.Cats.Search;
 using Catabase.Application.Requests;
 using Catabase.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,10 @@ public class CatModule : CarterModule
 	public override void AddRoutes(IEndpointRouteBuilder app)
 	{
 		// GET
-		app.MapGet("/", async ([FromServices] IGetCatsService service, int id, CancellationToken ct) =>
+		app.MapGet("/{Id:int}", async (
+			int id,
+			[FromServices] IGetCatsService service,
+			CancellationToken ct) =>
 		{
 			try
 			{
@@ -32,14 +36,27 @@ public class CatModule : CarterModule
 		.Produces(StatusCodes.Status404NotFound)
 		.Produces(StatusCodes.Status500InternalServerError);
 
-		app.MapGet("/search", async ([FromServices]IGetCatsService service) =>
+		// SEARCH
+		app.MapGet("/", async (
+			string? query, int page, int pageSize,
+			[FromServices] ISearchCatsService service,
+			CancellationToken ct) =>
 		{
-			var cats = await service.GetAllCatsAsync();
-			return Results.Ok(cats);
-		});
+			try
+			{
+				var searchResults = await service.SearchCatsAsync(query, page, pageSize);
+				return Results.Ok(searchResults);
+			}
+			catch (Exception)
+			{
+				return Results.Problem("An error occurred while searching for cats.", statusCode: 500);
+			}
+		})
+		.Produces<GetCatResponse>(StatusCodes.Status200OK)
+		.Produces(StatusCodes.Status500InternalServerError); ;
 
 		// POST
-		app.MapPost("/", async ([FromServices]ICreateCatService service, CreateCatRequest request, CancellationToken ct) =>
+		app.MapPost("/", async ([FromServices] ICreateCatService service, CreateCatRequest request, CancellationToken ct) =>
 		{
 			try
 			{

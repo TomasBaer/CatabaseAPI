@@ -21,11 +21,24 @@ public class CatRepository(ICatabaseDb db) : ICatRepository
 		throw new NotImplementedException();
 	}
 
-	public async Task<IEnumerable<Cat>> GetAllCatsAsync(CancellationToken ct = default)
+	public async Task<(IEnumerable<Cat>, int)> SearchCatsAsync(string query, int page, int pageSize, CancellationToken ct = default)
 	{
-		var cats = await _db.Cats.ToArrayAsync(ct);
+		var catsQuery = (IQueryable<Cat>)_db.Cats;
 
-		return cats;
+		if (!string.IsNullOrEmpty(query))
+		{
+			catsQuery = catsQuery.Where(cat => cat.Name.Contains(query));
+		}
+							
+
+		var totalCount = await catsQuery.CountAsync(ct);
+
+		var cats = await catsQuery
+							.Skip(page * pageSize)
+							.Take(pageSize)
+							.ToArrayAsync(ct);
+
+		return (cats, totalCount);
 	}
 
 	public Task<Cat?> GetCatByIdAsync(int id)
