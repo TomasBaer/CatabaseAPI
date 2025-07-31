@@ -1,5 +1,6 @@
 ﻿using Carter;
 using Catabase.Api.Api.Cats.Create;
+using Catabase.Api.Api.Cats.Delete;
 using Catabase.Api.Api.Cats.Get;
 using Catabase.Api.Api.Cats.Search;
 using Catabase.Application.Requests;
@@ -56,7 +57,10 @@ public class CatModule : CarterModule
 		.Produces(StatusCodes.Status500InternalServerError); ;
 
 		// POST
-		app.MapPost("/", async ([FromServices] ICreateCatService service, CreateCatRequest request, CancellationToken ct) =>
+		app.MapPost("/", async (
+			[FromServices] ICreateCatService service,
+			CreateCatRequest request,
+			CancellationToken ct) =>
 		{
 			try
 			{
@@ -70,5 +74,26 @@ public class CatModule : CarterModule
 		})
 		.Produces<GetCatResponse>(StatusCodes.Status200OK)
 		.Produces(StatusCodes.Status500InternalServerError);
+
+		// DELETE
+		app.MapDelete("/{Id:int}", async (
+			int id,
+			[FromServices] IDeleteCatService service,
+			CancellationToken ct) =>
+		{
+			try
+			{
+				await service.SoftDeleteCatAsync(id, ct);
+				return Results.NoContent();
+			}
+			catch (KeyNotFoundException)
+			{
+				return Results.NotFound();
+			}
+			catch (Exception)
+			{
+				return Results.Problem("An error occurred while deleting the cat.", statusCode: 500);
+			}
+		});
 	}
 }

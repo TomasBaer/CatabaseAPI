@@ -1,4 +1,5 @@
 ﻿using Catabase.Api.Api.Cats.Create;
+using Catabase.Api.Api.Cats.Delete;
 using Catabase.Api.Api.Cats.Get;
 using Catabase.Api.Api.Cats.Search;
 using Catabase.Application.Interfaces;
@@ -16,6 +17,7 @@ public static class StartupExtensions
 	{
 		services.AddScoped<ICreateCatService, CreateCatService>();
 		services.AddScoped<ISearchCatsService, SearchCatsService>();
+		services.AddScoped<IDeleteCatService, DeleteCatService>();
 
 		return services;
 	}

@@ -1,5 +1,7 @@
 ﻿using Catabase.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace Catabase.Infrastructure;
 
@@ -12,5 +14,5 @@ public interface ICatabaseDb
 
 public class CatabaseDb(DbContextOptions<CatabaseDb> options) : DbContext(options), ICatabaseDb
 {
-	public DbSet<Cat> Cats { get; set; }
+	public DbSet<Cat> Cats { get; set; }	
 }

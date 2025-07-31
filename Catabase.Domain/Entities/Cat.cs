@@ -10,4 +10,5 @@ public class Cat
 	public CoatColor PrimaryColor { get; set; }
 	public CoatColor? SecondaryColor { get; set; }
 	public int? Age { get; set; }
+	public bool Deleted { get; set; }
 }

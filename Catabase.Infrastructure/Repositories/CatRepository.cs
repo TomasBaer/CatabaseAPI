@@ -16,9 +16,37 @@ public class CatRepository(ICatabaseDb db) : ICatRepository
 		return cat.Id;
 	}
 
-	public Task DeleteCatAsync(int id)
+	public async Task<int> UpdateCatAsync(Cat update, CancellationToken ct = default)
 	{
-		throw new NotImplementedException();
+		var cat = await _db.Cats.FirstOrDefaultAsync(cat => cat.Id == update.Id, ct);
+		if (cat == null)
+		{
+			throw new KeyNotFoundException($"Cat with ID {update.Id} not found.");
+		}
+
+		cat.Name = update.Name;
+		cat.Breed = update.Breed;
+		cat.PrimaryColor = update.PrimaryColor;
+		cat.SecondaryColor = update.SecondaryColor;
+		cat.Age = update.Age;
+		cat.Deleted = update.Deleted;
+
+		_db.Cats.Update(cat);
+		_ = await _db.SaveChangesAsync(ct);
+
+		return cat.Id;
+	}
+
+	public async Task DeleteCatAsync(int id, CancellationToken ct = default)
+	{
+		var cat = await _db.Cats.FirstOrDefaultAsync(cat => cat.Id == id, ct);
+		if (cat == null)
+		{
+			throw new KeyNotFoundException($"Cat with ID {id} not found.");
+		}
+
+		_db.Cats.Remove(cat);
+		_ = await _db.SaveChangesAsync(ct);
 	}
 
 	public async Task<(IEnumerable<Cat>, int)> SearchCatsAsync(string query, int page, int pageSize, CancellationToken ct = default)
@@ -41,13 +69,12 @@ public class CatRepository(ICatabaseDb db) : ICatRepository
 		return (cats, totalCount);
 	}
 
-	public Task<Cat?> GetCatByIdAsync(int id)
+	public async Task<Cat?> GetCatByIdAsync(int id, CancellationToken ct = default)
 	{
-		throw new NotImplementedException();
+		var cat = await _db.Cats.FirstOrDefaultAsync(cat => cat.Id == id, ct);
+
+		return cat;
 	}
 
-	public Task UpdateCatAsync(Cat cat)
-	{
-		throw new NotImplementedException();
-	}
+	
 }
