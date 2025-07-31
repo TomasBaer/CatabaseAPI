@@ -51,7 +51,7 @@ public class CatRepository(ICatabaseDb db) : ICatRepository
 
 	public async Task<(IEnumerable<Cat>, int)> SearchCatsAsync(string query, int page, int pageSize, CancellationToken ct = default)
 	{
-		var catsQuery = (IQueryable<Cat>)_db.Cats;
+		var catsQuery = _db.Cats.Where(cat => !cat.Deleted);
 
 		if (!string.IsNullOrEmpty(query))
 		{
