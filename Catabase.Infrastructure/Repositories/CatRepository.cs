@@ -1,17 +1,21 @@
 ﻿using Catabase.Application.Interfaces;
 using Catabase.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Catabase.Infrastructure.Repositories;
 
-public class CatRepository(ICatabaseDb db) : ICatRepository
+public class CatRepository(ICatabaseDb db, ILogger<CatRepository> logger) : ICatRepository
 {
 	private readonly ICatabaseDb _db = db;
+	private readonly ILogger<CatRepository> _logger = logger;
 
 	public async Task<int> CreateCatAsync(Cat cat, CancellationToken ct = default)
 	{
 		_db.Cats.Add(cat);
 		await _db.SaveChangesAsync(ct);
+
+		_logger.LogInformation("CREATE cat {cat.Id} succeeded.", cat.Id);
 
 		return cat.Id;
 	}
@@ -34,6 +38,8 @@ public class CatRepository(ICatabaseDb db) : ICatRepository
 		_db.Cats.Update(cat);
 		_ = await _db.SaveChangesAsync(ct);
 
+		_logger.LogInformation("UPDATE cat {cat.Id} succeeded.", cat.Id);
+
 		return cat.Id;
 	}
 
@@ -47,6 +53,8 @@ public class CatRepository(ICatabaseDb db) : ICatRepository
 
 		_db.Cats.Remove(cat);
 		_ = await _db.SaveChangesAsync(ct);
+
+		_logger.LogInformation("DELETE cat {cat.Id} succeeded.", cat.Id);
 	}
 
 	public async Task<(IEnumerable<Cat>, int)> SearchCatsAsync(string query, int page, int pageSize, CancellationToken ct = default)
@@ -66,6 +74,8 @@ public class CatRepository(ICatabaseDb db) : ICatRepository
 							.Take(pageSize)
 							.ToArrayAsync(ct);
 
+		_logger.LogInformation("SEARCH cats succeeded.");
+
 		return (cats, totalCount);
 	}
 
@@ -73,8 +83,8 @@ public class CatRepository(ICatabaseDb db) : ICatRepository
 	{
 		var cat = await _db.Cats.FirstOrDefaultAsync(cat => cat.Id == id, ct);
 
-		return cat;
-	}
+		_logger.LogInformation("GET cat succeeded.");
 
-	
+		return cat;
+	}	
 }
