@@ -45,7 +45,7 @@ public class CatModule : CarterModule
 		{
 			try
 			{
-				var searchResults = await service.SearchCatsAsync(query, page, pageSize);
+				var searchResults = await service.SearchCatsAsync(query, page, pageSize, ct);
 				return Results.Ok(searchResults);
 			}
 			catch (Exception)
